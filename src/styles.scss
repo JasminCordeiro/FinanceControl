@@ -1,0 +1,53 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap");
+/* Importing Bootstrap SCSS file. */
+@import "bootstrap/scss/bootstrap";
+
+body {
+  font-family: "Roboto", sans-serif;
+}
+
+#sidebar {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 230px;
+  height: 100vh;
+  z-index: 1000;
+  box-shadow: 9px 0 10px rgba(0, 0, 0, 0.2);
+}
+
+.content {
+  margin-left: 230px; 
+  width: calc(
+    100% - 230px
+  ); 
+  padding: 20px; 
+}
+
+.bg-sidebar {
+  background-color: #1f2633;
+}
+
+.bg-sidebar-button {
+  background-color: #3f4d67;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.nav-link {
+  padding: 15px 20px; /* Espaçamento interno para os links */
+}
+
+.nav-link:hover,
+.nav-link-active {
+  background-color: #0e1218;
+  border-left: 4px solid #1dd5d2;
+}
+
+.card {
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.2);
+}
