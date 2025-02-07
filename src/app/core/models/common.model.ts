@@ -1,6 +1,6 @@
 export interface IExpense{
     key?: string;
     title: string;
-    description: string;
+    category: string;
     price: string;
 }

@@ -30,7 +30,7 @@ export class ExpenseFormComponent {
     this.expenseForm = this.fb.group({
       price: new FormControl('', [Validators.required]),
       title: new FormControl('', Validators.required),
-      description: new FormControl(''),
+      category: new FormControl(''),
     });
   }
 

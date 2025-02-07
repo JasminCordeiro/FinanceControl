@@ -1,5 +1,4 @@
 @import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap");
-/* Importing Bootstrap SCSS file. */
 @import "bootstrap/scss/bootstrap";
 
 body {
@@ -39,7 +38,7 @@ ul {
 }
 
 .nav-link {
-  padding: 15px 20px; /* Espaçamento interno para os links */
+  padding: 15px 20px; 
 }
 
 .nav-link:hover,
@@ -50,4 +49,50 @@ ul {
 
 .card {
   box-shadow: 0 0 6px rgba(0, 0, 0, 0.2);
+}
+
+.btn-primary{
+  background-color: #189E9C;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.1s ease;
+}
+
+.btn-primary:hover,active{
+  background-color: #127B7A;
+  border: none;
+}
+
+.btn-delete{
+  padding: 4px 4px;
+  background-color: #e4e4e4;
+  border: none;
+  border-radius: 40px ;
+  transition: background-color 0.3s ease, transform 0.1s ease;
+}
+
+.btn-edit{
+  padding: 6px 8px;
+  background-color: #e4e4e4;
+  border: none;
+  border-radius: 40px ;
+  transition: background-color 0.3s ease, transform 0.1s ease;
+}
+
+.btn-delete:hover,.btn-edit:hover,active{
+  background-color: #d4d4d4;
+  border: none;
+}
+
+.btn-category{
+  background-color: #87CEFA;
+  padding: 0px 12px;
+  border-radius: 20px;
+  color: white;
+  font-size: small;
 }

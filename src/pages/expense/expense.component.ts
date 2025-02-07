@@ -39,7 +39,7 @@ export class ExpenseComponent {
           this.expenses.push({
             key: item.key || '',
             title: expense.title,
-            description: expense.description,
+            category: expense.category,
             price: expense.price
           });
         });

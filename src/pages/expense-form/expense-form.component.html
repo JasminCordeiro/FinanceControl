@@ -17,10 +17,20 @@
                 }  
             </div>
               <div class="mb-3">
-                <label for="description" class="form-label">Description</label>
-                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" formControlName="description"></textarea>
+                <label for="category" class="form-label">Categoria</label>
+                <div class="dropdown">
+                  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Categoria
+                  </button>
+                  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <a class="dropdown-item" href="#">Saúde</a>
+                    <a class="dropdown-item" href="#">Alimentação</a>
+                    <a class="dropdown-item" href="#">Educação</a>
+                  </div>
+                </div>
+                <!-- <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" formControlName="category"></textarea> -->
               </div>
-              <button type="submit" class="btn btn-success">Save changes</button>
+              <button type="submit" class="btn-primary">Save changes</button>
           </form>
     </div>
 </div>
