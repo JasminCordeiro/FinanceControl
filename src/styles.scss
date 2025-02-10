@@ -49,9 +49,24 @@ ul {
 
 .card {
   box-shadow: 0 0 6px rgba(0, 0, 0, 0.2);
+  min-width: 250px; /* Evita que os cards fiquem muito pequenos */
+  flex-grow: 1; /* Permite que os cards ocupem espaço proporcionalmente */
 }
 
-.btn-primary{
+.row {
+  display: flex;
+  flex-wrap: wrap; /* Permite quebra de linha em telas menores */
+  justify-content: center; /* Centraliza os cards */
+}
+
+.card-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.btn-primary {
   background-color: #189E9C;
   color: white;
   font-size: 16px;
@@ -63,36 +78,54 @@ ul {
   transition: background-color 0.3s ease, transform 0.1s ease;
 }
 
-.btn-primary:hover,active{
+.btn-primary:hover,
+.btn-primary:active {
   background-color: #127B7A;
   border: none;
 }
 
-.btn-delete{
-  padding: 4px 4px;
+.btn-delete,
+.btn-edit {
+  padding: 6px 6px;
   background-color: #e4e4e4;
   border: none;
-  border-radius: 40px ;
+  border-radius: 40px;
   transition: background-color 0.3s ease, transform 0.1s ease;
 }
 
-.btn-edit{
-  padding: 6px 8px;
-  background-color: #e4e4e4;
-  border: none;
-  border-radius: 40px ;
-  transition: background-color 0.3s ease, transform 0.1s ease;
-}
-
-.btn-delete:hover,.btn-edit:hover,active{
+.btn-delete:hover,
+.btn-edit:hover,
+.btn-delete:active,
+.btn-edit:active {
   background-color: #d4d4d4;
   border: none;
 }
 
-.btn-category{
-  background-color: #87CEFA;
-  padding: 0px 12px;
-  border-radius: 20px;
-  color: white;
-  font-size: small;
+/* Ajusta os cards em telas menores */
+@media (max-width: 768px) {
+  .col-12.col-sm-2 {
+    flex: 0 0 100%; /* Cada card ocupa a largura total */
+    max-width: 100%;
+  }
+
+  .card {
+    width: 90%; /* Reduz a largura dos cards para melhor ajuste */
+    margin: 0 auto; /* Centraliza os cards */
+  }
+
+  .card-body h2 {
+    font-size: 1.5rem; /* Reduz tamanho do preço */
+  }
+}
+
+/* Ajusta para telas menores que 480px */
+@media (max-width: 480px) {
+  .card {
+    width: 100%; /* Faz os cards ocuparem toda a largura */
+  }
+
+  .btn-primary {
+    font-size: 14px;
+    padding: 8px 16px;
+  }
 }

@@ -1,0 +1,23 @@
+<div class="d-flex align-items-center gap-2">
+    <button class="btn btn-filter" (click)="setDateRange(1)">Hoje</button>
+    <button class="btn btn-filter" (click)="setDateRange(2)">Ontem</button>
+    <button class="btn btn-filter" (click)="setDateRange(7)">7 dias</button>
+    <button class="btn btn-filter" (click)="setDateRange(15)">15 dias</button>
+    <button class="btn btn-filter" (click)="setDateRange(30)">30 dias</button>
+  
+    <div class="date-picker-container">
+      <label for="date-range">Data</label>
+      <input 
+        type="date" 
+        [(ngModel)]="selectedDateRange.startDate" 
+        (change)="updateDateRange()" 
+      />
+      <span>▴</span>
+      <input 
+        type="date" 
+        [(ngModel)]="selectedDateRange.endDate" 
+        (change)="updateDateRange()" 
+      />
+    </div>
+  </div>
+  

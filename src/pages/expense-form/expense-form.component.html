@@ -1,36 +1,50 @@
 <div class="vh-100">
     <div class="">
-        <h4>Expense Form</h4>
+        <h1>Adicionando uma despesa</h1>
           <form [formGroup]="expenseForm" (submit)="onSubmit()">
             <div class="mb-3">
-                <label for="price" class="form-label">Price</label>
-                <input type="text" class="form-control" id="price" placeholder="Price" formControlName="price">
+                <label for="price" class="form-label">Valor da despesa</label>
+                <input type="number" class="form-control" id="price" min="0" step="0.01" placeholder="Valor da despesa" formControlName="price">
                 @if(expenseForm.get('price')?.hasError('required') && expenseForm.get('price')?.touched){
-                    <div class="form-text text-danger fw-bold">Price is required</div>
+                    <div class="form-text text-danger fw-bold">Campo obrigatório</div>
                 }
             </div>
               <div class="mb-3">
-                <label for="title" class="form-label">Title</label>
-                <input type="text" class="form-control" id="title" placeholder="Title" formControlName="title">
+                <label for="title" class="form-label">Nome da despesa</label>
+                <input type="text" class="form-control" id="title" placeholder="Nome da despesa" formControlName="title">
                 @if(expenseForm.get('price')?.hasError('required') && expenseForm.get('price')?.touched){
-                    <div class="form-text text-danger fw-bold">Title is required</div>
+                    <div class="form-text text-danger fw-bold">Campo obrigatório</div>
                 }  
             </div>
               <div class="mb-3">
                 <label for="category" class="form-label">Categoria</label>
                 <div class="dropdown">
-                  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Categoria
+                  <button 
+                    class="btn btn-secondary dropdown-toggle" 
+                    type="button" 
+                    id="dropdownMenuButton" 
+                    data-toggle="dropdown" 
+                    aria-haspopup="true" 
+                    aria-expanded="false"
+                  >
+                    {{ selectedCategory?.nameCategory || 'Categoria' }}
                   </button>
                   <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    <a class="dropdown-item" href="#">Saúde</a>
-                    <a class="dropdown-item" href="#">Alimentação</a>
-                    <a class="dropdown-item" href="#">Educação</a>
+                    <a 
+                      class="dropdown-item" 
+                      *ngFor="let category of categories" 
+                      (click)="selectCategory(category)"
+                    >
+                      {{ category.name }} - {{category.limit}}
+                    </a>
                   </div>
                 </div>
-                <!-- <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" formControlName="category"></textarea> -->
+                <label for="date">Data:</label>
+                <input type="date" id="date" formControlName="date" class="form-control">
+
               </div>
-              <button type="submit" class="btn-primary">Save changes</button>
+              
+              <button type="submit" class="btn-primary">Adicionar</button>
           </form>
     </div>
 </div>

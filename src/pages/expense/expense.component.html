@@ -1,5 +1,8 @@
-<div class="col">
 
+
+<div class="col">
+  <h1>Dashboard</h1>
+<app-date-filter class="d-flex justify-content-end mb-4" (dateFilterChanged)="filterExpenses($event)"></app-date-filter>
 
   <div class="row row-cols-1 row-cols-md-3 g-4 mb-3">
     <!-- Card 1 -->
@@ -7,7 +10,7 @@
       <div class="card h-100">
         <div class="card-body">
           <h6 class="card-title">Receitas Totais</h6>
-          <h2 class="fw-bold text-success ">R$ {{receitaTotal}}</h2>
+          <h2 class="fw-bold text-success">R$ {{ receitaTotal }}</h2>
         </div>
       </div>
     </div>
@@ -17,7 +20,7 @@
       <div class="card h-100">
         <div class="card-body">
           <h6 class="card-title">Despesas Totais</h6>
-          <h2 class="fw-bold text-danger">R$ {{despesasTotal}}</h2>
+          <h2 class="fw-bold text-danger">R$ {{ despesasTotal }}</h2>
         </div>
       </div>
     </div>
@@ -27,48 +30,49 @@
       <div class="card h-100">
         <div class="card-body">
           <h6 class="card-title fs-7">Saldo Atual</h6>
-          <h2 class="fw-bold text-primary fs-1">R$ {{saldoAtual}}</h2>
+          <h2 class="fw-bold text-primary fs-1">R$ {{ saldoAtual }}</h2>
         </div>
       </div>
     </div>
   </div>
 </div>
 
-<div class="container">
+<div class="col">
   <div class="mb-4 d-flex justify-content-end align-items-center">
     <button type="button" routerLink="/expense-form" class="btn-primary">
       Adicionar
     </button>
   </div>
 
-  
-  <div class="row">
-    <div *ngIf="isLoading" class="d-flex justify-content-center mt-4">
-      <div class="spinner-border text-primary" role="status">
-      </div>
-    </div>
-    <div class="col-12 col-sm-2 mb-4" *ngFor="let expense of expenses; let i = index">
+  <div class="row row-cols-1 row-cols-md-4 g-4">
+    <div class="col" *ngFor="let expense of filteredExpenses; let i = index; trackBy: trackByKey">
       <div class="card h-100">
         <div class="card-body">
           <h5 class="card-title">{{ expense.title }}</h5>
           <h2 class="fw-bold">R$ {{ expense.price }},00</h2>
-          <p class="card-text">{{ expense.category }}</p>
-          <div class="d-flex justify-content-between gap-2 ">
-            <div class="d-flex justify-content-center align-items-center btn-category">
-              Alimentacao
-            </div>
-            <div class="d-flex justify-content-end align-items-center gap-2">
-              <button type="button" class="btn-edit d-flex justify-content-center align-items-center" *ngIf="expense.key !== undefined" (click)="editExpense(expense.key)">
-                <img src="edit.svg" alt="" >
-              </button>
-              <button type="button" class="btn-delete d-flex justify-content-center align-items-center" *ngIf="expense.key !== undefined" (click)="removeExpense(expense.key)">
-                <img src="delete.svg" alt="" >
-              </button>
-            </div>
+
+          <div class="d-flex justify-content-end align-items-center gap-2 mt-2">
+          <app-category [categoryId]="+expense.category"></app-category>
+              <label for="">{{expense.date}}</label>
+            <button
+              type="button"
+              class="btn-edit d-flex justify-content-center align-items-center"
+              *ngIf="expense.key !== undefined"
+              (click)="editExpense(expense.key)"
+            >
+              <img src="edit.svg" alt="" />
+            </button>
+            <button
+              type="button"
+              class="btn-delete d-flex justify-content-center align-items-center"
+              *ngIf="expense.key !== undefined"
+              (click)="removeExpense(expense.key)"
+            >
+              <img src="delete.svg" alt="" />
+            </button>
           </div>
         </div>
       </div>
     </div>
   </div>
 </div>
-

@@ -3,49 +3,87 @@ import { Component } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { ExpenseService } from '../../core/services/expense.service';
 import { IExpense } from '../../app/core/models/common.model';
+import { CategoryComponent } from '../../app/layout/category/category.component';
+import { DateFilterComponent } from '../../app/layout/date-filter/date-filter.component';
+import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-expense',
-  imports: [CommonModule,RouterModule,],
+  imports: [CommonModule,RouterModule,CategoryComponent,DateFilterComponent],
   templateUrl: './expense.component.html',
   styleUrl: './expense.component.scss'
 })
 export class ExpenseComponent {
   expenses: IExpense[] = [];
+  filteredExpenses: IExpense[] = []; 
   despesasTotal = 0;
   receitaTotal = 5000;
   saldoAtual = 0;
   isLoading: boolean = false;
 
-  constructor(private expenseServise: ExpenseService, private router: Router){}
+  constructor(private expenseService: ExpenseService, private router: Router,private cd: ChangeDetectorRef ){}
 
   ngOnInit(): void{
     this.getAllExpenses();
   }
 
-  getAllExpenses(){
+  getAllExpenses() {
     this.isLoading = true;
-    this.expenseServise
-    .getAllExpenses()
-    .snapshotChanges()
-    .subscribe({
-      next: (data) =>{
-        this.expenses = [];
-        data.forEach((item)=>{
-          let expense = item.payload.toJSON() as IExpense;
-          this.despesasTotal += parseInt(expense.price);
-          this.saldoAtual = this.receitaTotal - this.despesasTotal
-          console.log(this.despesasTotal);
-          this.expenses.push({
-            key: item.key || '',
-            title: expense.title,
-            category: expense.category,
-            price: expense.price
+    this.expenseService
+      .getAllExpenses()
+      .snapshotChanges()
+      .subscribe({
+        next: (data) => {
+          this.expenses = [];
+          this.despesasTotal = 0;
+
+
+          data.forEach((item) => {
+            let expense = item.payload.toJSON() as IExpense;
+            
+            if (expense.date) {
+              expense.date = new Date(expense.date).toISOString().split('T')[0];
+            }
+
+            this.despesasTotal += parseInt(expense.price);
+            this.saldoAtual = this.receitaTotal - this.despesasTotal;
+            
+            this.expenses.push({
+              key: item.key || '',
+              title: expense.title,
+              category: expense.category,
+              price: expense.price,
+              date: expense.date 
+            });
           });
-        });
-        this.isLoading = false;}
-    });
+
+          this.filteredExpenses = [...this.expenses];
+
+          this.isLoading = false;
+        }
+      });
   }
+  
+  trackByKey(index: number, expense: IExpense): string {
+    return expense.key ?? index.toString();
+  }
+
+  filterExpenses(dateRange: { startDate: string, endDate: string }) {
+    const { startDate, endDate } = dateRange;
+    console.log("Filtro aplicado:", startDate, "até", endDate);
+  
+    this.filteredExpenses = this.expenses.filter(expense => {
+      if (!expense.date) return false;
+      const expenseDate = new Date(expense.date).toISOString().split('T')[0];
+      return expenseDate >= startDate && expenseDate <= endDate;
+    });
+  
+    console.log("Despesas filtradas:", this.filteredExpenses);
+  
+    this.cd.detectChanges();
+  }
+  
+  
 
   editExpense(key:string){
     this.router.navigate([`/expense-form/${key}`]);
@@ -53,7 +91,7 @@ export class ExpenseComponent {
 
   removeExpense(key:string){
     if(window.confirm('Are you sure?')){
-      this.expenseServise.deleteExpense(key);
+      this.expenseService.deleteExpense(key);
     }
   }
 

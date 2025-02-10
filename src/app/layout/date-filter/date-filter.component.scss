@@ -1,0 +1,48 @@
+.d-flex {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  
+  .gap-2 {
+    gap: 8px;
+  }
+  
+  .btn-filter {
+    background-color: #189E9C;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .btn-filter:hover {
+    background-color: #127B7A;
+  }
+  
+  .date-picker-container {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    padding: 5px;
+  }
+  
+  .date-picker-container input {
+    border: none;
+    padding: 5px;
+    font-size: 14px;
+  }
+  
+  .btn-search {
+    background-color: #189E9C;
+    border: none;
+    padding: 8px;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  
