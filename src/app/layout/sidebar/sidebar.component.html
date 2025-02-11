@@ -24,6 +24,7 @@
           routerLink="/transactions"
           href="#"
           class="nav-link text-white d-flex justify-content-start align-items-center gap-2"
+          routerLinkActive="nav-link-active"
         >
           <img src="chart.svg" alt="" />
           Relatórios</a
@@ -36,6 +37,7 @@
           routerLink="/configurations"
           href="#"
           class="nav-link text-white d-flex justify-content-start align-items-center gap-2"
+          routerLinkActive="nav-link-active"
         >
           <img src="profile.svg" class="ms-1" alt="" />
           Configurações</a
@@ -45,6 +47,7 @@
         <a
           href="#" (click)="authService.logout()"
           class="nav-link text-white d-flex justify-content-start align-items-center gap-2"
+          routerLinkActive="nav-link-active"
         >
           <img src="logout.svg" alt="" />
           Sair</a

@@ -1,1 +1,59 @@
-<p>configurations works!</p>
+<div class="container-fluid p-4">
+    <h2>Configurações de despesas</h2>
+    <div class="row mb-3">
+        <div class="col-md-4">
+            <input type="text" class="form-control" placeholder="Nome da categoria">
+        </div>
+        <div class="col-md-3 ">
+            <select class="form-select">
+                <option>Cor da categoria</option>
+                <option value="1">Azul</option>
+                <option value="2">Verde</option>
+                <option value="3">Amarelo</option>
+            </select>
+        </div>
+        <div class="col-md-3">
+            <input type="text" class="form-control" placeholder="R$ 0,00">
+        </div>
+        <div class="col-md-2">
+            <button class="btn btn-primary">Adicionar</button>
+        </div>
+    </div>
+    <div class="bg-white p-2 gap-2 border rounded">
+        <span class="badge bg-primary p-2 m-2">Educação R$200</span>
+        <span class="badge bg-info p-2 m-2">Transporte R$100</span>
+        <span class="badge bg-warning p-2 m-2">Lazer R$150</span>
+        <span class="badge bg-success p-2 m-2">Saúde R$300</span>
+    </div>
+    
+    <h2 class="mt-4">Configurações de usuário</h2>
+    <div class="d-flex flex-column w-50">
+        <div class="row mb-2">
+            <div class="">
+                <label class="form-label">Nome</label>
+                <div class="d-flex align-items-center gap-2">
+                    <input type="text" class="form-control" value="Jasmin Cordeiro" disabled>
+                    <a href=""><img src="edit.svg" alt=""/></a>
+                </div>
+            </div>
+        </div>
+        <div class="row mb-2">
+            <div class="">
+                <label class="form-label">Senha</label>
+                <div class="d-flex align-items-center gap-2">
+                    <input type="password" class="form-control" value="********" disabled>
+                    <a href=""><img src="edit.svg" alt=""/></a>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="">
+                <label class="form-label">E-mail</label>
+                <div class="d-flex align-items-center gap-2">
+                    <input type="email" class="form-control" value="jasmincordeiro@email.com" disabled>
+                    <a href=""><img src="edit.svg" alt=""/></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
