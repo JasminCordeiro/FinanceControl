@@ -1,3 +1,74 @@
-<p>
-  transactions works!
-</p>
+<div class="col p-4">
+  <h3 class="mb-4">Gráfico de despesas</h3>
+
+    <div class="p-4 m-4">
+      <app-chart></app-chart>
+    </div>
+
+  <div class="">
+    <h3 class="mb-3">Relatório de despesas</h3>
+  <div class="filters mb-3 d-flex justify-content-between gap-1">
+    <div class="col d-flex justify-content-center align-items-center">
+      <select class="form-select" [(ngModel)]="selectedCategory" (change)="selectCategory($event)">
+        <option value="" disabled selected>Selecione uma categoria</option>
+        <option *ngFor="let category of categories" [value]="category.name">
+          {{ category.name }} - {{ category.limit }}
+        </option>
+      </select>
+    </div>
+
+    <div class="d-flex justify-content-center align-items-center ">
+      <select class="form-select">
+        <option selected>Ordenar por</option>
+        <option value="nome">Nome</option>
+        <option value="preco">Preço</option>
+        <option value="data">Data</option>
+      </select>
+    </div>
+
+    <div class=" d-flex justify-content-center align-items-center">
+      <app-date-filter (dateFilterChanged)="filterByDate($event)"></app-date-filter>
+    </div>
+  </div>
+  </div>
+
+  <div class="table-container">
+    <div class="table-responsive">
+      <table class="table table-striped">
+        <thead class="text-center">
+          <tr>
+            <th class="col-auto">ID</th>
+            <th class="col-auto">Nome</th>
+            <th class="col-auto">Preço</th>
+            <th class="col-auto">Categoria</th>
+            <th class="col-auto">Data</th>
+            <th class="col-auto">Ações</th>
+          </tr>
+        </thead>
+        <tbody class="text-center">
+          <tr *ngFor="let expense of filteredExpenses; let i = index; trackBy: trackByKey">
+            <td>{{ i + 1 }}</td>
+            <td>{{ expense.title }}</td>
+            <td>R$ {{ expense.price }}</td>
+            <td><app-category [categoryId]="+expense.category"></app-category></td>
+            <td>{{ expense.date }}</td>
+            <td class="d-flex justify-content-center gap-2">
+              <button type="button" class="btn btn-sm" *ngIf="expense.key !== undefined"
+                (click)="editExpense(expense.key)">
+                <img src="edit.svg" alt="Editar">
+              </button>
+              <button type="button" class="btn btn-sm" *ngIf="expense.key "
+                (click)="removeExpense(expense.key)">
+                <img src="delete.svg" alt="Deletar">
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="col d-flex justify-content-end">
+    <button class="btn btn-primary">Emitir relatório</button>
+  </div>
+</div>

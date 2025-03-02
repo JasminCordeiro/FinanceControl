@@ -1,1 +1,29 @@
-<p>login works!</p>
+<div class="login-container d-flex justify-content-center align-items-center vh-100">
+    <div class="card shadow p-4 login-card">
+      <div class="text-center m-2">
+        <img src="logo.svg" alt="" />      </div>
+      <h2 class="text-center">Login</h2>
+  
+      <form>
+        <div class="mb-3">
+          <input type="email" class="form-control" placeholder="Email" required>
+        </div>
+        <div class="mb-3">
+          <input type="password" class="form-control" placeholder="Password" required>
+        </div>
+        <div class="form-check mb-3">
+          <input type="checkbox" class="form-check-input" id="saveDetails">
+          <label class="form-check-label" for="saveDetails">Salvar informações</label>
+        </div>
+        <button type="submit" class="btn btn-primary w-100" >Login</button>
+
+      </form>
+  
+      <div class="text-center mt-3">
+        <a href="/dashboard" class="text-decoration-none"><b>Esqueci minha senha</b></a>
+        <br>
+        <a href="/register" class="text-decoration-none">Ainda não tem uma conta? <strong>Registrar</strong></a>
+      </div>
+    </div>
+  </div>
+  
