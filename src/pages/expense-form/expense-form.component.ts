@@ -88,19 +88,29 @@ export class ExpenseFormComponent {
   }
 
   getExpensive(key: string) {
-    this.expenseService
-      .getExpense(key)
-      .snapshotChanges()
-      .subscribe({
-        next: (data) => {
-          let expense = data.payload.toJSON() as IExpense;
-
-          if (expense.date) {
-            expense.date = new Date(expense.date).toISOString().split("T")[0];
-          }
-
-          this.expenseForm.patchValue(expense);
-        },
-      });
+    const expenseObservable = this.expenseService.getExpense(key);
+  
+    if (!expenseObservable) {
+      console.error("Expense data is unavailable.");
+      return;
+    }
+  
+    // expenseObservable.snapshotChanges().subscribe({
+    //   next: (data) => {
+    //     if (!data.payload.exists()) {
+    //       console.error("No expense found with the provided key.");
+    //       return;
+    //     }
+  
+    //     let expense = data.payload.toJSON() as IExpense;
+  
+    //     if (expense && expense.date) {
+    //       expense.date = new Date(expense.date).toISOString().split("T")[0];
+    //     }
+  
+    //     this.expenseForm.patchValue(expense);
+    //   },
+    //   error: (error) => console.error("Error fetching expense:", error)
+    // });
   }
 }

@@ -30,7 +30,14 @@ export class ChartComponent implements OnInit, AfterViewInit {
   }
 
   getExpenses(): void {
-    this.expenseService.getAllExpenses().snapshotChanges().subscribe({
+    const expensesObservable = this.expenseService.getAllExpenses();
+
+    if (!expensesObservable) {
+        console.error('Não foi possível obter despesas. Usuário pode estar deslogado ou ocorreu um erro.');
+        return;
+    }
+
+   expensesObservable.snapshotChanges().subscribe({
       next: (data) => {
         this.expenses = data.map(item => item.payload.toJSON() as IExpense);
         this.updateCharts();

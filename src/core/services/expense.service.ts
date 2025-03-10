@@ -1,38 +1,78 @@
-import { Injectable } from '@angular/core';
-import { AngularFireDatabase, AngularFireList } from '@angular/fire/compat/database';
-import { IExpense } from '../../app/core/models/common.model';
+import { Injectable } from "@angular/core";
+import { getAuth } from 'firebase/auth';
+import { AngularFireDatabase, AngularFireList } from "@angular/fire/compat/database";
+import { IExpense } from "../../app/core/models/common.model";
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class ExpenseService {
-  private dbPath = "/expenses";
+  dbPath = "/expenses";
   expensesRef: AngularFireList<any>;
 
   constructor(private db: AngularFireDatabase) {
-    this.expensesRef = db.list(this.dbPath);
+    const userId = this.getUserId();
+    this.expensesRef = db.list(`${this.dbPath}/${userId}`);
   }
 
-  getAllExpenses(){
+  // Obtém o UID do usuário autenticado
+  getUserId(): string | null {
+    const auth = getAuth();
+    return auth.currentUser ? auth.currentUser.uid : null;
+  }
+
+  // Obtém todas as despesas do usuário autenticado
+  getAllExpenses() {
+    const userId = this.getUserId();
+    if (!userId) {
+      console.log("Usuário não autenticado.");
+      return null;
+    }
     return this.expensesRef;
   }
 
-  getExpense(key: string){
-    return this.db.object(`${this.dbPath}/${key}`);
-
+  // Obtém uma despesa específica do usuário autenticado
+  getExpense(key: string) {
+    const userId = this.getUserId();
+    if (!userId) {
+      console.log("Usuário não autenticado.");
+      return null;
+    }
+    return  this.expensesRef;
   }
+  
 
-  addExpense(expense:IExpense){
+  // Adiciona uma nova despesa para o usuário autenticado
+  addExpense(expense: IExpense) {
+    const userId = this.getUserId();
+
+    if (!userId) {
+      console.log("Usuário não autenticado.");
+      return;
+    }
+
     this.expensesRef.push(expense);
   }
 
-  updateExpense(key : string, expense:IExpense){
+  // Atualiza uma despesa do usuário autenticado
+  updateExpense(key: string, expense: IExpense) {
+    const userId = this.getUserId();
+    if (!userId) {
+      console.error("Usuário não autenticado.");
+      return;
+    }
     this.expensesRef.update(key, expense);
   }
 
-  deleteExpense(key : string){
+  // Remove uma despesa do usuário autenticado
+  deleteExpense(key: string) {
+    const userId = this.getUserId();
+    if (!userId) {
+      console.error("Usuário não autenticado.");
+      return;
+    }
+   
     return this.expensesRef.remove(key);
   }
-
-
 }

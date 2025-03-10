@@ -18,11 +18,13 @@ export const routes: Routes = [
     children: [
       { path: "login", component: LoginComponent },
       { path: "register", component: RegisterComponent },
-    ]
+    ],
   },
+  { path: '', redirectTo: '/login', pathMatch: 'full' },
+  { path: 'login', component: LoginComponent },
   {
     path: "",
-    component: MainLayoutComponent, // Layout com sidebar
+    component: MainLayoutComponent, 
     canActivate: [authGuard],
     children: [
       { path: "dashboard", component: ExpenseComponent },
@@ -32,5 +34,6 @@ export const routes: Routes = [
       { path: "expense-form/:id", component: ExpenseFormComponent },
     ]
   },
-  { path: "**", redirectTo: "/login" }, // Se a rota não existir, redireciona para login
+
+  { path: '**', redirectTo: '/login' }
 ];

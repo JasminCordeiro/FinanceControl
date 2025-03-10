@@ -52,7 +52,15 @@ export class TransactionsComponent implements OnInit {
   getAllExpenses(): void {
     this.isLoading = true;
 
-    this.expenseService.getAllExpenses().snapshotChanges().subscribe({
+    const expensesObservable = this.expenseService.getAllExpenses();
+
+    if (!expensesObservable) {
+        console.error('Não foi possível obter despesas. Usuário pode estar deslogado ou ocorreu um erro.');
+        this.isLoading = false;
+        return;
+    }
+
+    expensesObservable.snapshotChanges().subscribe({
       next: (data) => {
         this.expenses = [];
         this.despesasTotal = 0;

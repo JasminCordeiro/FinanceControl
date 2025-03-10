@@ -45,7 +45,6 @@ export class DateFilterComponent {
   }
 
   emitDateChange() {
-    console.log("Data selecionada:", this.selectedDateRange);
     this.dateFilterChanged.emit(this.selectedDateRange);
   }
 }
