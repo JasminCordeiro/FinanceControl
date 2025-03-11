@@ -56,6 +56,46 @@ export class AuthService {
     }
   }
 
+  async updatePassword(newPassword: string): Promise<boolean> {
+    try {
+        const user = await this.afAuth.currentUser;
+        await user?.updatePassword(newPassword);
+        return true; 
+    } catch (error) {
+        console.error('Erro ao atualizar a senha:', error);
+        return false; 
+    }
+}
+
+  async updateEmail(newEmail: string): Promise<void> {
+    const user = await this.afAuth.currentUser;
+    if (user) {
+      return user.updateEmail(newEmail).then(() => {
+        console.log('E-mail atualizado com sucesso!');
+      }).catch((error) => {
+        console.error('Erro ao atualizar e-mail:', error);
+        throw error;
+      });
+    } else {
+      throw new Error('Não foi possível obter as informações do usuário.');
+    }
+  }
+
+  async getEmail(): Promise<string | null> {
+    try {
+      const user = await this.afAuth.currentUser;
+      if (user && user.email) {
+        return user.email;
+      } else {
+        console.log('Nenhum usuário logado ou e-mail não disponível.');
+        return null; 
+      }
+    } catch (error) {
+      console.error('Erro ao obter o e-mail do usuário:', error);
+      return null; 
+    }
+  }
+
   // Logout do usuário
   async logout() {
     await this.afAuth.signOut();

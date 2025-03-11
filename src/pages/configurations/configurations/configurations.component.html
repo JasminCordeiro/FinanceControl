@@ -2,30 +2,44 @@
     <app-category-manager></app-category-manager>
     <h2 class="mt-4">Configurações de usuário</h2>
     <div class="d-flex flex-column w-50">
+        <!-- Nome (desabilitado para edição) -->
         <div class="row mb-2">
             <div class="">
                 <label class="form-label">Nome</label>
                 <div class="d-flex align-items-center gap-2">
                     <input type="text" class="form-control" value="Jasmin Cordeiro" disabled>
-                    <a href=""><img src="edit.svg" alt=""/></a>
                 </div>
             </div>
         </div>
+    
+        <!-- Senha -->
         <div class="row mb-2">
             <div class="">
                 <label class="form-label">Senha</label>
                 <div class="d-flex align-items-center gap-2">
-                    <input type="password" class="form-control" value="********" disabled>
-                    <a href=""><img src="edit.svg" alt=""/></a>
+                    <input type="password" class="form-control" placeholder="Nova Senha" [(ngModel)]="newPassword" [disabled]="!editPassword">
+                    <a href="#" *ngIf="!editPassword" (click)="enableEditPassword(); $event.preventDefault()">
+                        <img src="edit.svg" alt="Editar Senha">
+                    </a>
+                    <a href="#" *ngIf="editPassword" (click)="changePassword(); $event.preventDefault()">
+                        <img src="save.svg" alt="Salvar Senha">
+                    </a>
                 </div>
             </div>
         </div>
-        <div class="row">
+    
+        <!-- E-mail -->
+        <div class="row mb-2">
             <div class="">
                 <label class="form-label">E-mail</label>
                 <div class="d-flex align-items-center gap-2">
-                    <input type="email" class="form-control" value="jasmincordeiro@email.com" disabled>
-                    <a href=""><img src="edit.svg" alt=""/></a>
+                    <input type="email" class="form-control" [(ngModel)]="userEmail" [disabled]="!editEmail">
+                    <a href="#" *ngIf="!editEmail" (click)="enableEditEmail(); $event.preventDefault()">
+                        <img src="edit.svg" alt="Editar E-mail">
+                    </a>
+                    <a href="#" *ngIf="editEmail" (click)="changeEmail(); $event.preventDefault()">
+                        <img src="save.svg" alt="Salvar E-mail">
+                    </a>
                 </div>
             </div>
         </div>
