@@ -1,26 +1,39 @@
-import { NgStyle } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { CommonModule, NgStyle } from '@angular/common';
+import { Component, Input, OnInit } from '@angular/core';
 import { Category } from '../../core/models/category.model';
+import { CategoryService } from '../../../core/services/category/category.service';
 
 @Component({
   selector: 'app-category',
-  imports: [NgStyle],
+  imports: [NgStyle,CommonModule],
   templateUrl: './category.component.html',
   styleUrl: './category.component.scss'
 })
-export class CategoryComponent {
+export class CategoryComponent implements OnInit {
+  @Input() categoryId!: string;
+  categories: Category[] = [];
+  selectedCategory: Category | null = null;
 
-  @Input() categoryId!: number;
+  constructor(private categoryService: CategoryService) {} 
 
-  categories: Category[] = [
-    { id: 1, name: 'Saúde', color: '#A8E6CF', limit: '500.00' },   // Verde pastel
-{ id: 2, name: 'Alimentação', color: '#FFD3B6', limit: '1000.00' },  // Laranja pastel
-{ id: 3, name: 'Educação', color: '#D4A5E2', limit: '800.00' },  // Roxo pastel
-{ id: 4, name: 'Lazer', color: '#FFECB3', limit: '600.00' },  // Amarelo pastel
-{ id: 5, name: 'Pet', color: '#F5E1DA', limit: '300.00' }  // Bege pastel
-  ];
+  ngOnInit() {
+    this.loadCategories();
+  }
 
-  get category(): Category {
-    return this.categories.find(cat => cat.id === this.categoryId) || { id: 0, name: 'Desconhecido', color: 'gray', limit: '0.00' };
+  loadCategories() {
+    const categoriesObservable = this.categoryService.getCategories();
+
+    if (!categoriesObservable) {
+      console.error("Erro ao carregar categorias.");
+      return;
+    }
+
+    categoriesObservable.subscribe(
+      (categories: Category[]) => {
+        this.categories = categories;
+        this.selectedCategory = this.categories.find(cat => cat.id === String(this.categoryId)) || this.selectedCategory;
+      },
+      (error) => console.error("Erro ao buscar categorias:", error)
+    );
   }
 }

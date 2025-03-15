@@ -65,14 +65,7 @@ export class ExpenseService {
     this.expensesRef.update(key, expense);
   }
 
-  // Remove uma despesa do usuário autenticado
-  deleteExpense(key: string) {
-    const userId = this.getUserId();
-    if (!userId) {
-      console.error("Usuário não autenticado.");
-      return;
-    }
-   
-    return this.expensesRef.remove(key);
+  deleteExpense(expenseId: string): Promise<void> {
+    return this.expensesRef.remove(expenseId);
   }
 }

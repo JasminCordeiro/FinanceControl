@@ -11,8 +11,8 @@
     <div class="col d-flex justify-content-center align-items-center">
       <select class="form-select" [(ngModel)]="selectedCategory" (change)="selectCategory($event)">
         <option value="" disabled selected>Selecione uma categoria</option>
-        <option *ngFor="let category of categories" [value]="category.name">
-          {{ category.name }} - {{ category.limit }}
+        <option *ngFor="let category of categories" [value]="category.id">
+          {{ category.name }} - R$ {{ category.limit }}
         </option>
       </select>
     </div>
@@ -50,8 +50,8 @@
             <td>{{ i + 1 }}</td>
             <td>{{ expense.title }}</td>
             <td>R$ {{ expense.price }}</td>
-            <td><app-category [categoryId]="+expense.category"></app-category></td>
-            <td>{{ expense.date }}</td>
+            <td><app-category [categoryId]="expense.category"></app-category></td>
+            <td>{{ expense.date | date:'dd/MM/yyyy' }}</td>
             <td class="d-flex justify-content-center gap-2">
               <button type="button" class="btn btn-sm" *ngIf="expense.key !== undefined"
                 (click)="editExpense(expense.key)">

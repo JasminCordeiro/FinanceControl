@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { AngularFireDatabase, AngularFireList } from '@angular/fire/compat/database';
 import { AuthService } from '../auth/auth.service';
 import { Category } from '../../../app/core/models/category.model';
+import { map, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +13,6 @@ export class CategoryService {
     userId!: string;
     dbPath = "/expenses";
     categoryRef: AngularFireList<any>;
-  
 
   constructor(private db: AngularFireDatabase, private authService: AuthService) {
     const userId = this.getUserId();
@@ -24,34 +24,27 @@ export class CategoryService {
     return auth.currentUser ? auth.currentUser.uid : null;
   }
 
-  getCategories() {
-    if (!this.categoryRef) {
-      console.error("CategoriaRef não foi definida. Usuário pode não estar autenticado.");
-      return null;
-    }
-    return this.categoryRef.valueChanges(); 
+  getCategories(): Observable<Category[]> {
+    return this.categoryRef.snapshotChanges().pipe(
+      map(actions =>
+        actions.map(a => ({
+          id: a.key, 
+          ...a.payload.val()
+        }))
+      )
+    );
   }
   
-  addCategory(categoryData: any) {
-    const userId = this.authService.getUserId();
-    if (!userId) {
-      console.error("Usuário não autenticado.");
-      return;
-    }
-    console.log("Adicionando categoria...");
-
-    this.categoryRef.push(categoryData);
+  addCategory(categoryData: any): Promise<void> {
+    const newCategoryRef = this.categoryRef.push(categoryData); // ✅ Cria a referência primeiro
+    return newCategoryRef.set({ ...categoryData, id: newCategoryRef.key }); // ✅ Adiciona o ID gerado
   }
-  
 
-  updateCategory(categoryId: string, category: Category) {
-    if (!this.userId) return;
+  updateCategory(categoryId: string, category: Category): Promise<void> {
     return this.categoryRef.update(categoryId, category);
   }
 
-  deleteCategory(categoryId: string) {
-    if (!this.userId) return;
+  deleteCategory(categoryId: string): Promise<void> {
     return this.categoryRef.remove(categoryId);
   }
-
 }

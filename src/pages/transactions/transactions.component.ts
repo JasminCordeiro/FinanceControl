@@ -10,6 +10,7 @@ import { Category } from "../../app/core/models/category.model";
 import { DateFilterComponent } from '../../app/layout/date-filter/date-filter.component';
 import { CategoryComponent } from '../../app/layout/category/category.component';
 import { ChartComponent } from '../../app/layout/components/chart/chart.component';
+import { CategoryService } from '../../core/services/category/category.service';
 
 @Component({
   selector: 'app-transactions',
@@ -22,6 +23,7 @@ export class TransactionsComponent implements OnInit {
   expenses: IExpense[] = [];
   filteredExpenses: IExpense[] = [];
   isLoading: boolean = false;
+  categories: Category[] = []; 
 
   despesasTotal = 0;
   receitaTotal = 5000;
@@ -30,23 +32,16 @@ export class TransactionsComponent implements OnInit {
   selectedCategory: string = '';
   selectedSort: string = '';
 
-  categories: Category[] = [
-    { id: 1, name: "Saúde", color: "#71D06D", limit: "500.00" },
-    { id: 2, name: "Alimentação", color: "#FFC48C", limit: "1000.00" },
-    { id: 3, name: "Educação", color: "#D6A8FF", limit: "800.00" },
-    { id: 4, name: "Lazer", color: "#6D6727", limit: "600.00" },
-    { id: 5, name: "Pet", color: "#D2B48C", limit: "300.00" }
-  ];
-  
-
   constructor(
     private expenseService: ExpenseService,
     private router: Router,
-    private cd: ChangeDetectorRef
+    private cd: ChangeDetectorRef,
+    private categoryService: CategoryService,
   ) {}
 
   ngOnInit(): void {
     this.getAllExpenses();
+    this.loadCategories();  
   }
 
   getAllExpenses(): void {
@@ -90,19 +85,32 @@ export class TransactionsComponent implements OnInit {
     });
   }
 
+  loadCategories() {
+    const categoriesObservable = this.categoryService.getCategories();
+    
+    if (!categoriesObservable) {
+      console.error("Não foi possível carregar categorias.");
+      return;
+    }
+
+    categoriesObservable.subscribe(
+      (categories: Category[]) => {
+        this.categories = categories;
+      },
+      (error) => console.error("Erro ao carregar categorias:", error)
+    );
+  }
+
   applyFilters(): void {
     let filtered = [...this.expenses];
   
     if (this.selectedCategory) {
       console.log("applyFilters - Categoria selecionada:", this.selectedCategory);
   
-      // Buscar o ID da categoria pelo nome selecionado
-      const categoryObj = this.categories.find(cat => cat.name === this.selectedCategory);
-      if (categoryObj && typeof categoryObj.id === 'number') {
-        const selectedCategoryId: number = Number(categoryObj.id); // Garantindo que seja número
+      const categoryObj = this.categories.find(cat => cat.id === this.selectedCategory);
   
-        // Comparação correta entre números
-        filtered = filtered.filter(expense => Number(expense.category) === selectedCategoryId);
+      if (categoryObj) {
+        filtered = filtered.filter(expense => expense.category === categoryObj.id);
       }
     }
   
@@ -112,10 +120,6 @@ export class TransactionsComponent implements OnInit {
   
     console.log("Despesas filtradas:", this.filteredExpenses);
   }
-  
-  
-  
-
   filterByDate(dateRange: { startDate: string, endDate: string }): void {
     const { startDate, endDate } = dateRange;
 
@@ -147,7 +151,6 @@ export class TransactionsComponent implements OnInit {
       this.applyFilters();
     }
   }
-  
 
   editExpense(key: string): void {
     this.router.navigate([`/expense-form/${key}`]);

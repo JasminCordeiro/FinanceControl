@@ -3,31 +3,14 @@
     <h2 class="mt-4">Configurações de usuário</h2>
     <div class="d-flex flex-column w-50">
         <!-- Nome (desabilitado para edição) -->
-        <div class="row mb-2">
+        <!-- <div class="row mb-2">
             <div class="">
                 <label class="form-label">Nome</label>
                 <div class="d-flex align-items-center gap-2">
                     <input type="text" class="form-control" value="Jasmin Cordeiro" disabled>
                 </div>
             </div>
-        </div>
-    
-        <!-- Senha -->
-        <div class="row mb-2">
-            <div class="">
-                <label class="form-label">Senha</label>
-                <div class="d-flex align-items-center gap-2">
-                    <input type="password" class="form-control" placeholder="Nova Senha" [(ngModel)]="newPassword" [disabled]="!editPassword">
-                    <a href="#" *ngIf="!editPassword" (click)="enableEditPassword(); $event.preventDefault()">
-                        <img src="edit.svg" alt="Editar Senha">
-                    </a>
-                    <a href="#" *ngIf="editPassword" (click)="changePassword(); $event.preventDefault()">
-                        <img src="save.svg" alt="Salvar Senha">
-                    </a>
-                </div>
-            </div>
-        </div>
-    
+        </div> -->
         <!-- E-mail -->
         <div class="row mb-2">
             <div class="">
@@ -39,6 +22,22 @@
                     </a>
                     <a href="#" *ngIf="editEmail" (click)="changeEmail(); $event.preventDefault()">
                         <img src="save.svg" alt="Salvar E-mail">
+                    </a>
+                </div>
+            </div>
+        </div>
+
+          <!-- Senha -->
+          <div class="row mb-2">
+            <div class="">
+                <label class="form-label">Senha</label>
+                <div class="d-flex align-items-center gap-2">
+                    <input type="password" class="form-control" placeholder="Nova Senha" [(ngModel)]="newPassword" [disabled]="!editPassword">
+                    <a href="#" *ngIf="!editPassword" (click)="enableEditPassword(); $event.preventDefault()">
+                        <img src="edit.svg" alt="Editar Senha">
+                    </a>
+                    <a href="#" *ngIf="editPassword" (click)="changePassword(); $event.preventDefault()">
+                        <img src="save.svg" alt="Salvar Senha">
                     </a>
                 </div>
             </div>

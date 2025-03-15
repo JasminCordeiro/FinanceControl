@@ -1,4 +1,8 @@
-<div class="d-flex justify-content-center align-items-center btn-category" [ngStyle]="{ 'background-color': category.color }">
-    {{ category.name }} - Limite: R$ {{ category.limit }}
+<div *ngIf="selectedCategory" class="d-flex justify-content-center align-items-center btn-category"
+     [ngStyle]="{ 'background-color': selectedCategory.color}">
+  {{ selectedCategory.name }} - Limite: R$ {{ selectedCategory.limit }}
 </div>
-  
+
+<div *ngIf="!selectedCategory" class="d-flex justify-content-center align-items-center btn-category bg-secondary">
+  Categoria não encontrada
+</div>

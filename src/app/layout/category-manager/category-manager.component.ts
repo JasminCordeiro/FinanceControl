@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CategoryService } from '../../../core/services/category/category.service';
-import { AuthService } from '../../../core/services/auth/auth.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
@@ -14,57 +13,94 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 export class CategoryManagerComponent implements OnInit {
   categoryForm!: FormGroup;
   categories: any[] = [];
+  editingCategory: any = null; 
 
   constructor(
     private fb: FormBuilder,
-    private categoryService: CategoryService,
-    private authService: AuthService
+    private categoryService: CategoryService
   ) {}
 
   ngOnInit() {
-    this.initForm();
+    this.categoryForm = this.fb.group({
+      name: ['', Validators.required],
+      color: ['', Validators.required],
+      limit: ['', Validators.pattern(/^[0-9]+(\.[0-9]{1,2})?$/)]
+    });
     this.getAllCategories();
   }
 
-  private initForm() {
-    this.categoryForm = this.fb.group({
-      name: ['', Validators.required],
-      color: ['', [Validators.required, Validators.pattern(/^#[0-9A-F]{6}$/i)]], // Regex corrigida para cores hexadecimais válidas
-      limit: ['', Validators.pattern(/^[0-9]+(\.[0-9]{1,2})?$/)]
-    });
-  }
-
-  private getAllCategories() {
+  getAllCategories() {
     const categoriesObservable = this.categoryService.getCategories();
-
+  
     if (!categoriesObservable) {
-      console.error('Não foi possível obter categorias. Usuário pode estar deslogado ou ocorreu um erro.');
+      console.error('Não foi possível obter categorias.');
       return;
     }
 
-    categoriesObservable.subscribe({
-      next: (categories) => {
+    categoriesObservable.subscribe(
+      (categories) => {
         this.categories = categories;
-        console.log('Categorias carregadas:', this.categories);
       },
-      error: (error) => {
+      (error) => {
         console.error('Erro ao obter categorias:', error);
       }
-    });
+    );
   }
 
-  async onSubmit() {
+  onSubmit() {
     if (this.categoryForm.invalid) {
       this.categoryForm.markAllAsTouched();
       return;
     }
-
-    try {
-      await this.categoryService.addCategory(this.categoryForm.value);
-      this.categoryForm.reset();
-      this.getAllCategories(); // Atualiza categorias após adicionar uma nova
-    } catch (error) {
-      console.error('Falha ao adicionar categoria:', error);
+  
+    if (this.editingCategory?.id) { 
+      this.categoryService.updateCategory(this.editingCategory.id, this.categoryForm.value)
+        .then(() => { // 
+          this.categoryForm.reset();
+          this.editingCategory = null;
+          this.getAllCategories(); 
+        })
+        .catch((error: any) => console.error("Erro ao atualizar categoria:", error));
+    } else {
+      // Adiciona nova categoria
+      this.categoryService.addCategory(this.categoryForm.value)
+        .then(() => { //
+          this.categoryForm.reset();
+          this.getAllCategories(); 
+        })
+        .catch((error: any) => console.error("Erro ao adicionar categoria:", error));
     }
   }
+
+  editCategory(category: any) {
+    if (!category?.id) {
+      console.error("Erro: A categoria não tem um ID válido.");
+      return;
+    }
+    
+    this.editingCategory = { ...category }; 
+    this.categoryForm.patchValue({
+      name: category.name,
+      color: category.color,
+      limit: category.limit
+    });
+  }
+  
+
+  deleteCategory(category: any) {
+    if (!category || !category.id) {
+      console.error("Erro: A categoria não tem um ID válido.");
+      return;
+    }
+  
+    if (confirm(`Tem certeza que deseja excluir a categoria "${category.name}"?`)) {
+      this.categoryService.deleteCategory(category.id)
+        .then(() => {
+          console.log("Categoria excluída!");
+          this.getAllCategories(); // Atualiza lista
+        })
+        .catch((error: any) => console.error("Erro ao excluir categoria:", error));
+    }
+  }
+  
 }

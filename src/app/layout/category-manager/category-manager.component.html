@@ -1,22 +1,29 @@
 <h2>Configurações de categorias</h2>
-<form [formGroup]="categoryForm" (ngSubmit)="onSubmit()" >
-  <div class=" mb-3 d-flex justify-content-between gap-4 ">
-      <input type="text" class="form-control" formControlName="name" placeholder="Nome da categoria">
-      <input type="text" class="form-control" formControlName="limit" placeholder="R$ 0,00">
-      <input type="color" class="form-control form-control-color" formControlName="color" title="Escolha uma cor" >
-      <button class="btn btn-primary" type="submit">Adicionar</button>
+
+<form [formGroup]="categoryForm" (ngSubmit)="onSubmit()">
+  <div class="mb-3 d-flex justify-content-between gap-4">
+    <input type="text" class="form-control" formControlName="name" placeholder="Nome da categoria">
+    <input type="text" class="form-control" formControlName="limit" placeholder="R$ 0,00">
+    <input type="color" class="form-control form-control-color" formControlName="color" title="Escolha uma cor">
+    
+    <button class="btn btn-primary" type="submit">
+      {{ editingCategory ? 'Salvar Edição' : 'Adicionar' }}
+    </button>
   </div>
 </form>
+
 <div class="bg-white p-2 gap-2 border rounded">
   <ng-container *ngFor="let category of categories">
-    <span [ngStyle]="{'background-color': category.color}" class="badge p-2 m-2">{{category.name}} R${{category.limit}}
+    <span [ngStyle]="{'background-color': category.color}" class="badge p-2 m-2">
+      {{ category.name }} R${{ category.limit }}
 
-      <!-- <a href="#" (click)="editCategory(); $event.preventDefault()">
-        <img src="edit.svg" alt="Editar E-mail">
-    </a>
-    <a href="#" (click)="deleteCategory(); $event.preventDefault()">
-        <img src="delete.svg" alt="Salvar E-mail">
-    </a> -->
+      <a href="#" (click)="editCategory(category); $event.preventDefault()">
+        <img src="edit-white.svg" alt="Editar Categoria">
+      </a>
+      
+      <a href="#" (click)="deleteCategory(category); $event.preventDefault()">
+        <img src="delete-white.svg" alt="Excluir Categoria">
+      </a>
     </span>
   </ng-container>
 </div>

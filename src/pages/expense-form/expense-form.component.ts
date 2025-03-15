@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { Component } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import {
   FormBuilder,
   FormControl,
@@ -10,6 +10,7 @@ import {
 import { ExpenseService } from "../../core/services/expense.service";
 import { IExpense } from "../../app/core/models/common.model";
 import { ActivatedRoute, Router } from "@angular/router";
+import { CategoryService } from "../../core/services/category/category.service";
 import { Category } from "../../app/core/models/category.model";
 
 @Component({
@@ -18,22 +19,16 @@ import { Category } from "../../app/core/models/category.model";
   templateUrl: "./expense-form.component.html",
   styleUrl: "./expense-form.component.scss",
 })
-export class ExpenseFormComponent {
+export class ExpenseFormComponent implements OnInit {
   expenseForm!: FormGroup;
   expenseId = "";
   selectedCategory: any = null;
-
-  categories: Category[] = [
-    { id: 1, name: "Saúde", color: "#71D06D", limit: "500.00" },
-    { id: 2, name: "Alimentação", color: "#FFC48C", limit: "1000.00" },
-    { id: 3, name: "Educação", color: "#D6A8FF", limit: "800.00" },
-    { id: 4, name: "Lazer", color: "#6D6727", limit: "600.00" },
-    { id: 5, name: "Pet", color: "#D2B48C", limit: "300.00" },
-  ];
+  categories: Category[] = []; 
 
   constructor(
     private fb: FormBuilder,
     private expenseService: ExpenseService,
+    private categoryService: CategoryService, 
     private router: Router,
     private activatedRoute: ActivatedRoute
   ) {
@@ -54,18 +49,35 @@ export class ExpenseFormComponent {
     });
   }
 
-  selectCategory(category: any) {
-    this.selectedCategory = category;
-    this.expenseForm.patchValue({ category: category.id });
-  }
-
   ngOnInit(): void {
+    this.loadCategories();  
     this.activatedRoute.params.subscribe({
       next: (params) => {
         this.expenseId = params["id"];
-        this.getExpensive(this.expenseId);
+        this.getExpense(this.expenseId);
       },
     });
+  }
+
+  loadCategories() {
+    const categoriesObservable = this.categoryService.getCategories();
+    
+    if (!categoriesObservable) {
+      console.error("Não foi possível carregar categorias.");
+      return;
+    }
+
+    categoriesObservable.subscribe(
+      (categories: Category[]) => {
+        this.categories = categories;
+      },
+      (error) => console.error("Erro ao carregar categorias:", error)
+    );
+  }
+
+  selectCategory(category: Category) {
+    this.selectedCategory = category;
+    this.expenseForm.patchValue({ category: category.id });
   }
 
   onSubmit() {
@@ -87,30 +99,12 @@ export class ExpenseFormComponent {
     }
   }
 
-  getExpensive(key: string) {
+  getExpense(key: string) {
     const expenseObservable = this.expenseService.getExpense(key);
   
     if (!expenseObservable) {
       console.error("Expense data is unavailable.");
       return;
     }
-  
-    // expenseObservable.snapshotChanges().subscribe({
-    //   next: (data) => {
-    //     if (!data.payload.exists()) {
-    //       console.error("No expense found with the provided key.");
-    //       return;
-    //     }
-  
-    //     let expense = data.payload.toJSON() as IExpense;
-  
-    //     if (expense && expense.date) {
-    //       expense.date = new Date(expense.date).toISOString().split("T")[0];
-    //     }
-  
-    //     this.expenseForm.patchValue(expense);
-    //   },
-    //   error: (error) => console.error("Error fetching expense:", error)
-    // });
   }
 }
