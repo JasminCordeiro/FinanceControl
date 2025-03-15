@@ -13,7 +13,7 @@ export class ExpenseService {
 
   constructor(private db: AngularFireDatabase) {
     const userId = this.getUserId();
-    this.expensesRef = db.list(`${this.dbPath}/${userId}`);
+    this.expensesRef = db.list(`${this.dbPath}/${userId}/expenses_list`);
   }
 
   // Obtém o UID do usuário autenticado

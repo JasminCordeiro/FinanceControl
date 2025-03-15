@@ -18,10 +18,11 @@ export class AuthService {
     // });
   }
 
-  getUserId(): string | null {
-    const auth = getAuth();
-    return auth.currentUser ? auth.currentUser.uid : null;
+  async getUserId(): Promise<string | null> {
+    const user = await this.afAuth.currentUser;
+    return user ? user.uid : null;
   }
+  
 
   // Registro de novo usuário
   async register(email: string, password: string): Promise<any> {
@@ -31,7 +32,7 @@ export class AuthService {
       if (userCredential.user) {
         const uid = userCredential.user.uid;
         // Criando um nó de despesas vazio
-        await this.db.object(`/expenses/${uid}`).set({});
+        await this.db.object(`/expenses/${uid}`).update({});
         await userCredential.user.sendEmailVerification();
         return { success: true, message: "Cadastro realizado! Verifique seu e-mail para ativar a conta." };
       }
@@ -47,12 +48,12 @@ export class AuthService {
     try {
       const userCredential = await this.afAuth.signInWithEmailAndPassword(email, password);
       if (userCredential.user?.emailVerified) {
-        return userCredential;
+        return { success: true, user: userCredential.user };
       } else {
-        throw new Error("Seu e-mail ainda não foi verificado. Por favor, verifique seu e-mail antes de fazer login.");
+        return { success: false, message: "Seu e-mail ainda não foi verificado. Verifique seu e-mail antes de fazer login." };
       }
-    } catch (error) {
-      throw error;
+    }catch (error) {
+      return { success: false, message: (error as Error).message };
     }
   }
 
@@ -99,9 +100,12 @@ export class AuthService {
   // Logout do usuário
   async logout() {
     await this.afAuth.signOut();
-    this.router.navigate(["/login"]);
-    console.log("logout realizado")
+    setTimeout(() => {
+      this.router.navigate(["/login"]);
+      console.log("logout realizado");
+    }, 100);
   }
+  
 
   // Verifica se há usuário logado
   getUser() {

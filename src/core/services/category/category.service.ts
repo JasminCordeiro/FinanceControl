@@ -24,24 +24,25 @@ export class CategoryService {
     return auth.currentUser ? auth.currentUser.uid : null;
   }
 
+  getCategories() {
+    if (!this.categoryRef) {
+      console.error("CategoriaRef não foi definida. Usuário pode não estar autenticado.");
+      return null;
+    }
+    return this.categoryRef.valueChanges(); 
+  }
+  
   addCategory(categoryData: any) {
     const userId = this.authService.getUserId();
     if (!userId) {
       console.error("Usuário não autenticado.");
       return;
     }
+    console.log("Adicionando categoria...");
+
     this.categoryRef.push(categoryData);
   }
   
-  getCategories() {
-    const userId = this.authService.getUserId();
-    if (!userId) {
-      console.error("Usuário não autenticado.");
-      return;
-    }
-
-    return this.categoryRef.valueChanges;
-  }
 
   updateCategory(categoryId: string, category: Category) {
     if (!this.userId) return;
