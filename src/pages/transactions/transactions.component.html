@@ -17,9 +17,9 @@
       </select>
     </div>
 
-    <div class="d-flex justify-content-center align-items-center ">
-      <select class="form-select">
-        <option selected>Ordenar por</option>
+    <div class="d-flex justify-content-center align-items-center">
+      <select class="form-select" [(ngModel)]="selectedSort" (change)="applyFilters()">
+        <option selected value="">Ordenar por</option>
         <option value="nome">Nome</option>
         <option value="preco">Preço</option>
         <option value="data">Data</option>

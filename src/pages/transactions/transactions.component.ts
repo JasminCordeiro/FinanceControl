@@ -105,10 +105,7 @@ export class TransactionsComponent implements OnInit {
     let filtered = [...this.expenses];
   
     if (this.selectedCategory) {
-      console.log("applyFilters - Categoria selecionada:", this.selectedCategory);
-  
       const categoryObj = this.categories.find(cat => cat.id === this.selectedCategory);
-  
       if (categoryObj) {
         filtered = filtered.filter(expense => expense.category === categoryObj.id);
       }
@@ -117,9 +114,8 @@ export class TransactionsComponent implements OnInit {
     this.sortExpenses(filtered);
     this.filteredExpenses = filtered;
     this.cd.detectChanges();
-  
-    console.log("Despesas filtradas:", this.filteredExpenses);
   }
+  
   filterByDate(dateRange: { startDate: string, endDate: string }): void {
     const { startDate, endDate } = dateRange;
 
@@ -136,13 +132,14 @@ export class TransactionsComponent implements OnInit {
 
   sortExpenses(expenses: IExpense[]): void {
     if (this.selectedSort === 'nome') {
-      expenses.sort((a, b) => a.title.localeCompare(b.title));
+      expenses.sort((a, b) => a.title.toLowerCase().localeCompare(b.title.toLowerCase()));
     } else if (this.selectedSort === 'preco') {
       expenses.sort((a, b) => Number(a.price) - Number(b.price));
     } else if (this.selectedSort === 'data') {
       expenses.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
     }
   }
+  
 
   selectCategory(event: Event): void {
     const target = event.target as HTMLSelectElement;
