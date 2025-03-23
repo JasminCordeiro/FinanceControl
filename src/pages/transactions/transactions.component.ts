@@ -14,7 +14,7 @@ import { CategoryService } from '../../core/services/category/category.service';
 
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
-
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-transactions',
@@ -164,9 +164,38 @@ export class TransactionsComponent implements OnInit {
 
   removeExpense(key: string): void {
     if (!key) return;
-    if (window.confirm('Tem certeza que deseja excluir esta despesa?')) {
-      this.expenseService.deleteExpense(key);
-    }
+    Swal.fire({
+      title: 'Deseja realmente excluir?',
+      text: 'Essa ação não pode ser desfeita.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#dc3545', // vermelho
+      cancelButtonColor: '#6c757d',  // cinza
+      confirmButtonText: 'Sim, excluir',
+      cancelButtonText: 'Cancelar',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.expenseService.deleteExpense(key)
+          .then(() => {
+            Swal.fire({
+              icon: 'success',
+              title: 'Excluída!',
+              text: 'Despesa excluída com sucesso.',
+              confirmButtonColor: '#28a745',
+            });
+            this.getAllExpenses();
+          })
+          .catch((error) => {
+            console.error("Erro ao excluir despesa:", error);
+            Swal.fire({
+              icon: 'error',
+              title: 'Erro',
+              text: 'Erro ao excluir despesa. Verifique o console.',
+              confirmButtonColor: '#dc3545',
+            });
+          });
+      }
+    });
   }
 
   trackByKey(index: number, expense: IExpense): string {

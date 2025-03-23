@@ -12,17 +12,12 @@ export class AuthService {
 
   userData: User | null = null; 
 
-  constructor(private afAuth: AngularFireAuth, private router: Router, private db: AngularFireDatabase) {
-    // this.afAuth.authState.subscribe(user => {
-    //   this.userData = user; // Atualiza o usuário quando logado/deslogado
-    // });
-  }
+  constructor(private afAuth: AngularFireAuth, private router: Router, private db: AngularFireDatabase) {  }
 
   async getUserId(): Promise<string | null> {
     const user = await this.afAuth.currentUser;
     return user ? user.uid : null;
   }
-  
 
   // Registro de novo usuário
   async register(email: string, password: string): Promise<any> {
@@ -36,9 +31,23 @@ export class AuthService {
         await userCredential.user.sendEmailVerification();
         return { success: true, message: "Cadastro realizado! Verifique seu e-mail para ativar a conta." };
       }
-    } catch (error) {
-      console.error('Registration Error:', error);
-      return { success: false, message: error };
+    } catch (error: any) {
+      const code = error.code;
+  
+      let message = 'Não foi possível fazer login. Verifique seu e-mail e senha.';
+  
+      switch (code) {
+        case 'auth/email-already-in-use':
+          return 'Este e-mail já está em uso.';
+        case 'auth/invalid-email':
+          return 'E-mail inválido.';
+        case 'auth/operation-not-allowed':
+          return 'A operação não está habilitada no Firebase.';
+        case 'auth/weak-password':
+          return 'A senha deve conter pelo menos 6 caracteres.';
+        default:
+          return 'Ocorreu um erro inesperado.';
+      }
     }
     return { success: false, message: "Ocorreu um erro inesperado durante o registro." };
   }
@@ -50,38 +59,105 @@ export class AuthService {
       if (userCredential.user?.emailVerified) {
         return { success: true, user: userCredential.user };
       } else {
-        return { success: false, message: "Seu e-mail ainda não foi verificado. Verifique seu e-mail antes de fazer login." };
+        await this.afAuth.signOut();
+        return {
+          success: false,
+          message: 'Seu e-mail ainda não foi verificado. Verifique sua caixa de entrada.'
+        };
       }
-    }catch (error) {
-      return { success: false, message: (error as Error).message };
+    }catch (error: any) {
+      const code = error.code;
+  
+      let message = 'Não foi possível fazer login. Verifique seu e-mail e senha.';
+  
+      switch (code) {
+        case 'auth/user-not-found':
+          message = 'Usuário não encontrado.';
+          break;
+        case 'auth/wrong-password':
+          message = 'Senha incorreta.';
+          break;
+        case 'auth/invalid-email':
+          message = 'E-mail inválido.';
+          break;
+        case 'auth/invalid-credential':
+          message = 'Credenciais inválidas. Verifique seu e-mail e senha.';
+          break;
+      }
+      return { success: false, message };
     }
   }
 
-  async updatePassword(newPassword: string): Promise<boolean> {
-    try {
-        const user = await this.afAuth.currentUser;
-        await user?.updatePassword(newPassword);
-        return true; 
-    } catch (error) {
-        console.error('Erro ao atualizar a senha:', error);
-        return false; 
-    }
-}
-
-  async updateEmail(newEmail: string): Promise<void> {
+  async updatePassword(newPassword: string): Promise<{ success: boolean; message: string }> {
     const user = await this.afAuth.currentUser;
-    if (user) {
-      return user.updateEmail(newEmail).then(() => {
-        console.log('E-mail atualizado com sucesso!');
-      }).catch((error) => {
-        console.error('Erro ao atualizar e-mail:', error);
-        throw error;
-      });
-    } else {
-      throw new Error('Não foi possível obter as informações do usuário.');
+  
+    if (!user) {
+      return {
+        success: false,
+        message: 'Usuário não autenticado.',
+      };
+    }
+  
+    try {
+      await user.updatePassword(newPassword);
+      return {
+        success: true,
+        message: 'Senha atualizada com sucesso!',
+      };
+    } catch (error: any) {
+      console.error('Erro ao atualizar a senha:', error);
+  
+      let message = 'Erro ao atualizar a senha.';
+  
+      if (error.code === 'auth/requires-recent-login') {
+        message = 'Por segurança, faça login novamente antes de alterar sua senha.';
+      }
+  
+      return {
+        success: false,
+        message,
+      };
     }
   }
+  
 
+  async updateEmail(newEmail: string): Promise<{ success: boolean; message: string }> {
+    if (!newEmail || !newEmail.includes('@')) {
+      return { success: false, message: 'Por favor, insira um e-mail válido.' };
+    }
+  
+    const user = await this.afAuth.currentUser;
+  
+    if (!user) {
+      return { success: false, message: 'Usuário não autenticado.' };
+    }
+  
+    try {
+      await user.updateEmail(newEmail);
+      return { success: true, message: 'E-mail atualizado com sucesso!' };
+  
+    } catch (error: any) {
+      let message = 'Erro ao atualizar o e-mail.';
+  
+      switch (error.code) {
+        case 'auth/invalid-email':
+          message = 'O e-mail informado é inválido.';
+          break;
+        case 'auth/email-already-in-use':
+          message = 'Este e-mail já está em uso por outra conta.';
+          break;
+        case 'auth/operation-not-allowed':
+          message = 'A operação não está habilitada no Firebase.';
+          break;
+        case 'auth/requires-recent-login':
+          message = 'Por segurança, faça login novamente antes de atualizar o e-mail.';
+          break;
+      }
+  
+      return { success: false, message };
+    }
+  }
+  
   async getEmail(): Promise<string | null> {
     try {
       const user = await this.afAuth.currentUser;
@@ -97,6 +173,26 @@ export class AuthService {
     }
   }
 
+  async resetPassword(email: string): Promise<{ success: boolean, message: string }> {
+    try {
+      await this.afAuth.sendPasswordResetEmail(email);
+      return { success: true, message: 'E-mail de redefinição de senha enviado com sucesso!' };
+    } catch (error: any) {
+      let message = 'Erro ao enviar e-mail de redefinição.';
+  
+      switch (error.code) {
+        case 'auth/user-not-found':
+          message = 'Usuário não encontrado.';
+          break;
+        case 'auth/invalid-email':
+          message = 'E-mail inválido.';
+          break;
+      }
+  
+      return { success: false, message };
+    }
+  }
+
   // Logout do usuário
   async logout() {
     await this.afAuth.signOut();
@@ -105,7 +201,6 @@ export class AuthService {
       console.log("logout realizado");
     }, 100);
   }
-  
 
   // Verifica se há usuário logado
   getUser() {

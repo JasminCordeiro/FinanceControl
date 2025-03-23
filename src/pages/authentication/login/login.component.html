@@ -7,22 +7,39 @@
 
       <form (ngSubmit)="login()">
           <div class="mb-3">
-              <input type="email" class="form-control" placeholder="Email" required [(ngModel)]="email" name="email">
-          </div>
-          <div class="mb-3">
-              <input type="password" class="form-control" placeholder="Senha" required [(ngModel)]="password" name="password">
-          </div>
-          <div class="form-check mb-3">
-              <input type="checkbox" class="form-check-input" id="saveDetails">
-              <label class="form-check-label" for="saveDetails">Salvar informações</label>
-          </div>
-          <button type="submit" class="btn btn-primary w-100">Login</button>
+            <input
+            placeholder="E-mail"
+            type="email"
+            class="form-control"
+            id="email"
+            [(ngModel)]="email"
+            name="email"
+            required
+          />
+        </div>
+          <div class="mb-3" *ngIf="!forgotPasswordMode">
+            <input
+            placeholder="Senha"
+            type="password"
+            class="form-control"
+            id="password"
+            [(ngModel)]="password"
+            name="password"
+            required
+          />
+        </div>
+        <button type="submit" class="btn btn-primary w-100 my-2">
+            {{ forgotPasswordMode ? 'Enviar' : 'Entrar' }}
+          </button>
+          <button *ngIf="!forgotPasswordMode"
+            type="button"
+            (click)="toggleForgotPassword()"
+            class="btn btn-link w-100 text-center"
+          ><b>Esqueci minha senha</b>
+          </button>
       </form>
-
-      <div class="text-center mt-3">
-          <a class="text-decoration-none"><b>Esqueci minha senha</b></a>
-          <br>
-          <a href="/register" class="text-decoration-none">
+      <div class="text-center">
+          <a href="/register" class="text-decoration-none mt-3">
               Ainda não tem uma conta? <strong>Registrar</strong>
           </a>
       </div>
