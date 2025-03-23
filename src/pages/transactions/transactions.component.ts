@@ -12,6 +12,10 @@ import { CategoryComponent } from '../../app/layout/category/category.component'
 import { ChartComponent } from '../../app/layout/components/chart/chart.component';
 import { CategoryService } from '../../core/services/category/category.service';
 
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
+
+
 @Component({
   selector: 'app-transactions',
   standalone: true,
@@ -163,4 +167,43 @@ export class TransactionsComponent implements OnInit {
   trackByKey(index: number, expense: IExpense): string {
     return expense.key ?? index.toString();
   }
+
+  getCategoryNameById(id: string): string {
+    const category = this.categories.find(cat => cat.id === id);
+    return category ? category.name : 'N/A';
+  }
+
+  emitirRelatorio() {
+    const doc = new jsPDF();
+  
+    // Título
+    doc.setFontSize(16);
+    doc.text('Relatório de Despesas', 14, 15);
+  
+    // Cabeçalho da tabela
+    const head = [['ID', 'Nome', 'Preço', 'Categoria', 'Data']];
+  
+    // Dados da tabela
+    const data = this.filteredExpenses.map((expense, index) => {
+      const category = this.categories.find(cat => cat.id === expense.category);
+      return [
+        index + 1,
+        expense.title,
+        `R$ ${expense.price}`,
+        category ? `${category.name} - R$ ${category.limit}` : 'N/A',
+        new Date(expense.date).toLocaleDateString('pt-BR'),
+      ];
+    });
+    
+    autoTable(doc, {
+      head: head,
+      body: data,
+      startY: 20,
+    });
+  
+    // Baixar o PDF
+    doc.save('relatorio-despesas.pdf');
+  }
+  
+  
 }
