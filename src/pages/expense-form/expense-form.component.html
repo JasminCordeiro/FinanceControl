@@ -1,6 +1,5 @@
-<div class="vh-100">
-  <div class="">
-    <h1>Adicionando uma despesa</h1>
+<div class="vh-100 p-4">
+    <h1 class="mb-4">Adicionando uma despesa</h1>
     <form [formGroup]="expenseForm" (submit)="onSubmit()">
       <div class="mb-3">
         <label for="title" class="form-label">Nome da despesa</label>
@@ -11,9 +10,8 @@
           placeholder="Nome da despesa"
           formControlName="title"
         />
-        @if(expenseForm.get('price')?.hasError('required') &&
-        expenseForm.get('price')?.touched){
-        <div class="form-text text-danger fw-bold">Campo obrigatório</div>
+        @if(expenseForm.get('title')?.hasError('required') && expenseForm.get('title')?.touched){
+          <div class="form-text text-danger fw-bold">Campo obrigatório</div>
         }
       </div>
       <div class="mb-3">
@@ -27,21 +25,30 @@
           placeholder="Valor da despesa"
           formControlName="price"
         />
-        @if(expenseForm.get('price')?.hasError('required') &&
-        expenseForm.get('price')?.touched){
-        <div class="form-text text-danger fw-bold">Campo obrigatório</div>
+        @if(expenseForm.get('price')?.hasError('required') && expenseForm.get('price')?.touched){
+          <div class="form-text text-danger fw-bold">Campo obrigatório</div>
         }
       </div>
-      <div class="mb-3 ">
-        <label for="category">Categoria</label>
-        <select id="category" formControlName="category" class="form-control mb-2">
-        <option value="" disabled selected>Selecione uma categoria</option>
-          <option *ngFor="let category of categories" [value]="category.id">
-            {{ category.name }} - R$ {{category.limit}}
-          </option>
-        </select>
+      <div class="mb-3">
+        <label for="category" class="form-label">Categoria</label>
+        <div class="d-flex align-items-center gap-2">
+          <select id="category" formControlName="category" class="form-control">
+            <option value="" disabled selected>Selecione uma categoria</option>
+            <option *ngFor="let category of categories" [value]="category.id">
+              {{ category.name }} - R$ {{category.limit}}
+            </option>
+          </select>
+          <a href="/configurations" class="d-flex align-items-center" style="height: 38px;">
+            <img src="add.svg" alt="Add Category" style="width: 24px; height: 24px;" />
+          </a>
+        </div>
+        @if(expenseForm.get('category')?.hasError('required') && expenseForm.get('category')?.touched){
+          <div class="form-text text-danger fw-bold">Campo obrigatório</div>
+        }
+      </div>
 
-        <label for="date">Data:</label>
+      <div class="mb-4">
+        <label for="date" class="form-label">Data</label>
         <input
           type="date"
           id="date"
@@ -49,7 +56,6 @@
           class="form-control"
         />
       </div>
-      <button type="submit" class="btn-primary">Adicionar</button>
+      <button type="submit" class="btn btn-primary">Adicionar</button>
     </form>
   </div>
-</div>

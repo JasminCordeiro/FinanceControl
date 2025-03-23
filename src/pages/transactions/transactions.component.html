@@ -1,3 +1,6 @@
+<ng-container *ngIf="!isLoading; else loadingTemplate">
+
+
 <div class="col p-4">
   <h3 class="mb-4">Gráfico de despesas</h3>
 
@@ -5,7 +8,6 @@
       <app-chart></app-chart>
     </div>
 
-  <div class="">
     <h3 class="mb-3">Relatório de despesas</h3>
   <div class="filters mb-3 d-flex justify-content-between gap-1">
     <div class="col d-flex justify-content-center align-items-center">
@@ -30,11 +32,10 @@
       <app-date-filter (dateFilterChanged)="filterByDate($event)"></app-date-filter>
     </div>
   </div>
-  </div>
 
   <div class="table-container">
     <div class="table-responsive">
-      <table class="table table-striped">
+      <table class="table table-striped" *ngIf="!isLoading; else loadingTemplate">
         <thead class="text-center">
           <tr>
             <th class="col-auto">ID</th>
@@ -71,3 +72,11 @@
     <button class="btn btn-primary" (click)="emitirRelatorio()">Emitir relatório</button>
   </div>
 </div>
+</ng-container>
+<ng-template #loadingTemplate>
+  <div class="d-flex justify-content-center align-items-center vh-100">
+    <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
+    </div>
+  </div>
+</ng-template>
+

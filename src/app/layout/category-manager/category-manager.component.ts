@@ -14,6 +14,7 @@ export class CategoryManagerComponent implements OnInit {
   categoryForm!: FormGroup;
   categories: any[] = [];
   editingCategory: any = null; 
+  isLoading: boolean = true;
 
   constructor(
     private fb: FormBuilder,
@@ -30,19 +31,24 @@ export class CategoryManagerComponent implements OnInit {
   }
 
   getAllCategories() {
+    this.isLoading = true;
+
     const categoriesObservable = this.categoryService.getCategories();
   
     if (!categoriesObservable) {
       console.error('Não foi possível obter categorias.');
+      this.isLoading = false;
       return;
     }
 
     categoriesObservable.subscribe(
       (categories) => {
         this.categories = categories;
+        this.isLoading = false;
       },
       (error) => {
         console.error('Erro ao obter categorias:', error);
+        this.isLoading = false;
       }
     );
   }

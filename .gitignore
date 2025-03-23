@@ -1,17 +1,54 @@
-# See https://docs.github.com/get-started/getting-started-with-git/ignoring-files for more about ignoring files.
-
-# Compiled output
+# ========================================
+# Output and Build Artifacts
+# ========================================
 /dist
 /tmp
 /out-tsc
 /bazel-out
+/coverage
 
-# Node
+# ========================================
+# Node Modules and Logs
+# ========================================
 /node_modules
-npm-debug.log
-yarn-error.log
+npm-debug.log*
+yarn-error.log*
+*.log
 
-# IDEs and editors
+# ========================================
+# Environment Files
+# ========================================
+*.env
+environment.ts
+environment.prod.ts
+
+# ========================================
+# Angular Specific
+# ========================================
+/.angular/cache
+/typings
+
+# ========================================
+# Sass Cache
+# ========================================
+.sass-cache/
+
+# ========================================
+# Testing and Debugging
+# ========================================
+/libpeerconnection.log
+testem.log
+/connect.lock
+
+# ========================================
+# System Files
+# ========================================
+.DS_Store
+Thumbs.db
+
+# ========================================
+# IDE Configurations
+# ========================================
 .idea/
 .project
 .classpath
@@ -19,38 +56,18 @@ yarn-error.log
 *.launch
 .settings/
 *.sublime-workspace
+*.code-workspace
 
-# Visual Studio Code
+# VS Code
 .vscode/*
 !.vscode/settings.json
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
-.history/*
+.history/
 
-# Miscellaneous
-/.angular/cache
-.sass-cache/
-/connect.lock
-/coverage
-/libpeerconnection.log
-testem.log
-/typings
-
-# System files
-.DS_Store
-Thumbs.db
-
-environment.ts
-environment.prod.ts
-*.env
-*.log
-
+# ========================================
+# Application Specific
+# ========================================
 src/core/constants/constant.ts
-
-Thumbs.db
-.DS_Store
-
-.vscode/
-*.code-workspace
 constant.ts

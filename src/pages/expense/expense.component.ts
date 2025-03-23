@@ -43,6 +43,8 @@ export class ExpenseComponent implements OnInit {
 
     if (!categoriesObservable) {
       console.error('Erro ao carregar categorias.');
+      this.isLoading = false;
+
       return;
     }
 
@@ -62,8 +64,7 @@ export class ExpenseComponent implements OnInit {
           this.categorias = categories;
           this.getAllExpenses(); 
         },
-        (error) => console.error('Erro ao carregar categorias:', error)
-      );
+        (error) => console.error('Erro ao carregar categorias:', error));
   }
 
   getAllExpenses() {

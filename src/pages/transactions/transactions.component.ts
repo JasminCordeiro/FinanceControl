@@ -90,19 +90,24 @@ export class TransactionsComponent implements OnInit {
   }
 
   loadCategories() {
+    this.isLoading = true;
+
     const categoriesObservable = this.categoryService.getCategories();
     
     if (!categoriesObservable) {
       console.error("Não foi possível carregar categorias.");
+      this.isLoading = false;
       return;
     }
 
     categoriesObservable.subscribe(
       (categories: Category[]) => {
         this.categories = categories;
+        this.isLoading = false;
       },
       (error) => console.error("Erro ao carregar categorias:", error)
     );
+    this.isLoading = false;
   }
 
   applyFilters(): void {
