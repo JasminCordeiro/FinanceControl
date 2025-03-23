@@ -25,6 +25,7 @@ export class ExpenseComponent implements OnInit {
   receitaTotal = 5000;
   saldoAtual = 0;
   isLoading: boolean = false;
+  categorySpendingMap: { [categoryId: string]: number } = {};
 
   constructor(
     private expenseService: ExpenseService,
@@ -80,7 +81,9 @@ export class ExpenseComponent implements OnInit {
     expensesObservable.snapshotChanges().subscribe({
       next: (data) => {
         this.expenses = [];
+        this.filteredExpenses = [];
         this.despesasTotal = 0;
+        this.categorySpendingMap = {}; // Reinicia o mapa
 
         data.forEach((item) => {
           let expense = item.payload.toJSON() as IExpense;
@@ -89,20 +92,28 @@ export class ExpenseComponent implements OnInit {
             expense.date = new Date(expense.date).toISOString().split('T')[0];
           }
 
-          this.despesasTotal += parseFloat(expense.price);
+          const value = parseFloat(expense.price) || 0;
+
+          this.despesasTotal += value;
           this.saldoAtual = this.receitaTotal - this.despesasTotal;
 
           const categoryFound = this.categorias.find((cat) => cat.id === expense.category) || {
             id: "0",
-            name: 'Sem categoriaaa',
+            name: 'Sem categoria',
             color: 'gray',
             limit: '0.00',
           };
-          
+
+          const categoryId = categoryFound.id;
+          if (!this.categorySpendingMap[categoryId]) {
+            this.categorySpendingMap[categoryId] = 0;
+          }
+          this.categorySpendingMap[categoryId] += value;
+
           this.expenses.push({
             key: item.key || '',
             title: expense.title,
-            category: categoryFound.id, 
+            category: categoryId,
             price: expense.price,
             date: expense.date,
           });
@@ -155,5 +166,14 @@ export class ExpenseComponent implements OnInit {
         .catch((error) => console.error("Erro ao excluir despesa:", error)); 
     }
   }
-  
+
+  parseFloat(value: string | number): number {
+    return Number.parseFloat(value as string);
+  }
+
+  getCategoriaColor(restante: number): string {
+  if (restante > 0) return '#28a745';    
+  if (restante === 0) return '#ffc107';  
+  return '#dc3545';                      
+}
 }

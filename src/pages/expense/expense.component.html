@@ -37,6 +37,22 @@
   </div>
 </div>
 
+<div class="d-flex flex-wrap gap-2">
+  <div 
+    *ngFor="let categoria of categorias" 
+    class="px-3 py-2 rounded-pill text-white fw-semibold"
+    [ngStyle]="{
+      backgroundColor: getCategoriaColor(parseFloat(categoria.limit) - (categorySpendingMap[categoria.id] || 0))
+    }"
+    style="font-size: 0.85rem;"
+  >
+    {{ categoria.name }} = R$ {{
+      parseFloat(categoria.limit) - (categorySpendingMap[categoria.id] || 0)
+    }}
+  </div>
+</div>
+
+
 <div class="col" *ngIf="!isLoading; else loadingTemplate">
   <div class="mb-4 d-flex justify-content-end align-items-center">
     <button type="button" routerLink="/expense-form" class="btn-primary">
