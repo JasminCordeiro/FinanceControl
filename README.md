@@ -44,7 +44,16 @@
   Protótipos para as principais páginas da aplicação foram elaborados e podem ser encontrados no seguinte link do [Figma](https://www.figma.com/design/6L5zIBpaJ9M7Wz28wgwjzM/Untitled?node-id=0-1&t=NLvv0cFWPiLDMLJd-1). As páginas prototipadas incluem:
   - Tela de Login e Cadastro de Usuários.
   - Tela de Dashboard.
-  - Tela de Transações.
+  - Tela de Relatórios.
   - Tela de Configuração Despesas + Usuários.
 
   Esses protótipos foram criados para fornecer uma visão inicial da interface e da experiência do usuário, priorizando a usabilidade e o design intuitivo.  
+
+### 5. Tecnologias Utilizadas
+
+- Angular, como framework principal do frontend;
+- Firebase, para autenticação, banco de dados em tempo real e hospedagem;
+- Bootstrap 5, para garantir um layout responsivo e moderno;
+- SweetAlert2, para exibir mensagens e confirmações interativas;
+- Charts.js, para gerar gráficos de gastos e receitas;
+- jsPDF e o plugin autoTable, para geração de relatórios em PDF.
