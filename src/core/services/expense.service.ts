@@ -22,6 +22,26 @@ export class ExpenseService {
     return auth.currentUser ? auth.currentUser.uid : null;
   }
 
+  getIncomeRef() {
+    const userId = this.getUserId();
+    if (!userId) return null;
+    return this.db.object(`/expenses/${userId}/income`);
+  }
+
+  getIncome() {
+    const incomeRef = this.getIncomeRef();
+    if (!incomeRef) return null;
+    return incomeRef.valueChanges();
+  }
+
+  setIncome(value: number): Promise<void> {
+    const incomeRef = this.getIncomeRef();
+    if (!incomeRef) {
+      return Promise.reject('Usuário não autenticado');
+    }
+    return incomeRef.set(value);
+  }
+
   // Obtém todas as despesas do usuário autenticado
   getAllExpenses() {
     const userId = this.getUserId();
@@ -39,7 +59,7 @@ export class ExpenseService {
       console.log("Usuário não autenticado.");
       return null;
     }
-    return  this.expensesRef;
+    return this.db.object(`/expenses/${userId}/expenses_list/${key}`);
   }
   
 

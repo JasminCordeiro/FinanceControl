@@ -1,0 +1,10 @@
+.btn-sm.position-absolute {
+    background-color: #f8f9fa;
+    border-radius: 50%;
+    padding: 6px;
+    transition: background-color 0.2s ease;
+  
+    &:hover {
+      background-color: #e9ecef;
+    }
+  }

@@ -23,10 +23,11 @@ export class ExpenseComponent implements OnInit {
   filteredExpenses: IExpense[] = [];
   categorias: Category[] = [];
   despesasTotal = 0;
-  receitaTotal = 5000;
+  receitaTotal = 0;
   saldoAtual = 0;
   isLoading: boolean = false;
   categorySpendingMap: { [categoryId: string]: number } = {};
+  editandoReceita = false;
 
   constructor(
     private expenseService: ExpenseService,
@@ -38,7 +39,104 @@ export class ExpenseComponent implements OnInit {
   ngOnInit(): void {
     this.loadCategories();
     this.getAllExpenses();
+    this.loadIncome();
   }
+
+  loadIncome() {
+    const incomeObservable = this.expenseService.getIncome();
+  
+    if (!incomeObservable) {
+      console.warn('Usuário não autenticado para carregar receita.');
+      return;
+    }
+  
+    incomeObservable.subscribe({
+      next: (value) => {
+        this.receitaTotal = Number(value) || 0;
+        this.saldoAtual = this.receitaTotal - this.despesasTotal;
+        this.cd.detectChanges();
+      },
+      error: (err) => {
+        console.error('Erro ao carregar receita:', err);
+      }
+    });
+  }
+  onIncomeChange(event: any) {
+    const newIncome = Number(event.target.value);
+    if (isNaN(newIncome)) return;
+  
+    this.expenseService.setIncome(newIncome).then(() => {
+      this.receitaTotal = newIncome;
+      this.saldoAtual = this.receitaTotal - this.despesasTotal;
+      this.cd.detectChanges();
+    });
+  }
+
+  confirmIncomeEdit(event: any) {
+    const novoValor = Number(event.target.value);
+    if (!isNaN(novoValor) && novoValor >= 0) {
+      this.expenseService.setIncome(novoValor)
+        .then(() => {
+          this.receitaTotal = novoValor;
+          this.saldoAtual = this.receitaTotal - this.despesasTotal;
+          this.cd.detectChanges();
+        })
+        .catch((error) => console.error('Erro ao salvar receita:', error));
+    }
+
+    this.editandoReceita = false;
+  }
+
+  cancelIncomeEdit() {
+    this.editandoReceita = false;
+  }
+
+  abrirModalEditarReceita() {
+    Swal.fire({
+      title: 'Editar receita mensal',
+      input: 'number',
+      inputLabel: 'Novo valor (R$)',
+      inputValue: this.receitaTotal,
+      inputAttributes: {
+        min: '0',
+      },
+      showCancelButton: true,
+      confirmButtonText: 'Salvar',
+      cancelButtonText: 'Cancelar',
+      inputValidator: (value) => {
+        if (!value || Number(value) < 0) {
+          return 'Informe um valor válido.';
+        }
+        return null;
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        const novoValor = Number(result.value);
+        this.expenseService.setIncome(novoValor)
+          .then(() => {
+            this.receitaTotal = novoValor;
+            this.saldoAtual = this.receitaTotal - this.despesasTotal;
+            this.cd.detectChanges();
+            Swal.fire({
+              icon: 'success',
+              title: 'Receita atualizada!',
+              text: `Novo valor: R$ ${novoValor}`,
+              confirmButtonColor: '#28a745'
+            });
+          })
+          .catch((error) => {
+            console.error('Erro ao salvar receita:', error);
+            Swal.fire({
+              icon: 'error',
+              title: 'Erro ao salvar',
+              text: 'Ocorreu um erro ao salvar o novo valor.',
+              confirmButtonColor: '#dc3545'
+            });
+          });
+      }
+    });
+  }
+  
 
   loadCategories() {
     const categoriesObservable = this.categoryService.getCategories();

@@ -106,5 +106,20 @@ export class ExpenseFormComponent implements OnInit {
       console.error("Expense data is unavailable.");
       return;
     }
+  
+    expenseObservable.valueChanges().subscribe((data: any) => {
+      if (data) {
+        this.expenseForm.patchValue({
+          title: data.title,
+          price: data.price,
+          category: data.category,
+          date: data.date.split("T")[0], // apenas a parte YYYY-MM-DD
+        });
+  
+        this.selectedCategory = this.categories.find(
+          (cat) => cat.id === data.category
+        );
+      }
+    });
   }
 }

@@ -69,7 +69,13 @@ export class ChartComponent implements OnInit, AfterViewInit {
 
     expensesObservable.snapshotChanges().subscribe({
       next: (data) => {
-        this.expenses = data.map((item) => item.payload.toJSON() as IExpense);
+        this.expenses = data.map((item) => {
+          const expense = item.payload.toJSON() as IExpense;
+          return {
+            ...expense,
+            key: item.key || '',
+          };
+        });
         this.updateCharts();
       },
     });
@@ -147,26 +153,28 @@ export class ChartComponent implements OnInit, AfterViewInit {
     const anoAtual = hoje.getFullYear(); 
 
     this.expenses.forEach((expense) => {
-      const dateObj = new Date(expense.date);
-      const mesDespesa = dateObj.getMonth() + 1;
-      const anoDespesa = dateObj.getFullYear();
-
-      if (mesDespesa === mesAtual && anoDespesa === anoAtual) {
-        const formattedDate = new Intl.DateTimeFormat("pt-BR", {
-          day: "2-digit",
-          month: "2-digit",
-        }).format(dateObj); 
-
+      if (!expense.date) return;
+      const [anoStr, mesStr, diaStr] = expense.date.split('T')[0].split('-');
+      const ano = Number(anoStr);
+      const mes = Number(mesStr);
+      const dia = Number(diaStr);
+  
+      if (mes === mesAtual && ano === anoAtual) {
+        const formattedDate = `${diaStr}/${mesStr}`;
+  
         expensesByDate[formattedDate] =
           (expensesByDate[formattedDate] || 0) + Number(expense.price);
-
         this.totalDespesasMesAtual += Number(expense.price);
       }
     });
-
-    const labels = Object.keys(expensesByDate).sort();
-    const values = labels.map((date) => expensesByDate[date]);
-
+  
+    const labels = Object.keys(expensesByDate).sort((a, b) => {
+      const [diaA, mesA] = a.split('/').map(Number);
+      const [diaB, mesB] = b.split('/').map(Number);
+      return new Date(anoAtual, mesA - 1, diaA).getTime() - new Date(anoAtual, mesB - 1, diaB).getTime();
+    });
+  
+    const values = labels.map((label) => expensesByDate[label]);
     return { labels, values };
   }
 
@@ -187,7 +195,9 @@ export class ChartComponent implements OnInit, AfterViewInit {
         type: "bar",
         data: {
           labels: [],
-          datasets: [{ data: [], backgroundColor: [] }],
+          datasets: [
+            { label: "Gastos por Categoria", data: [], backgroundColor: [] },
+          ],
         },
         options: { responsive: true, maintainAspectRatio: false },
       })
@@ -195,7 +205,7 @@ export class ChartComponent implements OnInit, AfterViewInit {
 
     this.charts.push(
       new Chart(this.expensesOverTime.nativeElement, {
-        type: "bar", 
+        type: "bar",
         data: {
           labels: [],
           datasets: [
@@ -238,7 +248,7 @@ export class ChartComponent implements OnInit, AfterViewInit {
     // Atualizar gráfico de valor gasto por categoria
     this.charts[0].data.labels = expensesByCategoryData.labels;
     this.charts[0].data.datasets[0].data = expensesByCategoryData.values;
-    this.charts[0].data.datasets[0].backgroundColor = expensesByCategoryData.colors;
+    this.charts[0].data.datasets[0].backgroundColor =expensesByCategoryData.colors;
     this.charts[0].update();
 
     // Atualizar gráfico de quantidade de despesas por categoria
