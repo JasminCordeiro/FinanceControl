@@ -29,7 +29,7 @@
   5. **Histórico de Transações**:
      - Consulta e edição de transações anteriores.
      - Filtros por data, categoria e tipo (receita ou despesa).
-  6. **Funcionalidades Futuras (se houver tempo)**:
+  6. **Funcionalidades Futuras**:
      - Exportação de relatórios financeiros em PDF.
 
 ### 3. Restrições
