@@ -43,8 +43,8 @@
 
   Protótipos para as principais páginas da aplicação foram elaborados e podem ser encontrados no seguinte link do [Figma](https://www.figma.com/design/6L5zIBpaJ9M7Wz28wgwjzM/Untitled?node-id=0-1&t=NLvv0cFWPiLDMLJd-1). As páginas prototipadas incluem:
   - Tela de Login e Cadastro de Usuários.
-  - Tela de Registro de Transações (Home).
-  - Tela de Relatórios e Gráficos (Dashboard).
+  - Tela de Dashboard.
+  - Tela de Transações.
   - Tela de Configuração Despesas + Usuários.
 
   Esses protótipos foram criados para fornecer uma visão inicial da interface e da experiência do usuário, priorizando a usabilidade e o design intuitivo.  
