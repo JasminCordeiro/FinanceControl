@@ -77,14 +77,10 @@
      - Consulta e edição de transações anteriores.
      - Filtros por data, categoria e tipo (receita ou despesa).
      - Exportação de relatórios financeiros em PDF.
-  
-### 2. Funcionalidades previstas e não implementadas
-  1. Divisão de despesas por mês (estruturação mais granular por períodos ainda em desenvolvimento).
-
-### 3. Principais desafios e dificuldades
+### 2. Principais desafios e dificuldades
 Durante o desenvolvimento do projeto, alguns dos principais desafios enfrentados foram relacionados à configuração e integração com o Firebase. A autenticação de usuários exigiu atenção especial, principalmente no tratamento de estados assíncronos e controle de sessão. Além disso, a estruturação do banco de dados em tempo real para suportar filtros por data e categoria envolveu um aprendizado adicional de regras de segurança e modelagem de dados no Firebase. Outro desafio relevante foi a lógica para geração dinâmica dos gráficos e relatórios, que exigiu tratamento adequado dos dados para garantir precisão e performance. Apesar das dificuldades, todos os obstáculos contribuíram para um aprendizado mais aprofundado sobre as ferramentas utilizadas.
 
-### 4. Instruções para instalação e execução
+### 3. Instruções para instalação e execução
 1. **Clone o repositório**
    git clone https://github.com/JasminCordeiro/FinanceControl.git
 2. **Acesse a pasta do projeto**
