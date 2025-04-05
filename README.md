@@ -91,7 +91,7 @@ Durante o desenvolvimento do projeto, alguns dos principais desafios enfrentados
    cd seu-repositorio
 3. **Instale as dependências**
    npm install
-4. Rode a aplicação:
+4. **Rode a aplicação**
    ng serve
 
 
