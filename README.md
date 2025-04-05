@@ -56,3 +56,44 @@
 - SweetAlert2, para exibir mensagens e confirmações interativas;
 - Charts.js, para gerar gráficos de gastos e receitas;
 - jsPDF e o plugin autoTable, para geração de relatórios em PDF.
+
+
+
+# **Resultados**
+
+### 1. Funcionalidades implementadas
+  1. **Cadastro de Usuários**:
+     - Criação de contas para cada usuário, com autenticação por login e senha.
+  2. **Cadastro de Transações**:
+     - Registro de receitas (ex.: salário, bônus) e despesas (ex.: contas, compras).
+     - Criação de categorias personalizáveis (ex.: alimentação, transporte, lazer).
+  3. **Relatórios e Gráficos**:
+     - Exibição de gastos por filtro.
+     - Comparação de receitas e despesas em gráficos mensais e anuais.
+  4. **Orçamento**:
+     - Definição de limites de gastos por categoria.
+     - Alertas sobre limites excedidos ou próximos de serem atingidos.
+  5. **Histórico de Transações**:
+     - Consulta e edição de transações anteriores.
+     - Filtros por data, categoria e tipo (receita ou despesa).
+     - Exportação de relatórios financeiros em PDF.
+  
+### 2. Funcionalidades previstas e não implementadas
+  1. Divisão de despesas por mês (estruturação mais granular por períodos ainda em desenvolvimento).
+
+### 4. Principais desafios e dificuldades
+Durante o desenvolvimento do projeto, alguns dos principais desafios enfrentados foram relacionados à configuração e integração com o Firebase. A autenticação de usuários exigiu atenção especial, principalmente no tratamento de estados assíncronos e controle de sessão. Além disso, a estruturação do banco de dados em tempo real para suportar filtros por data e categoria envolveu um aprendizado adicional de regras de segurança e modelagem de dados no Firebase. Outro desafio relevante foi a lógica para geração dinâmica dos gráficos e relatórios, que exigiu tratamento adequado dos dados para garantir precisão e performance. Apesar das dificuldades, todos os obstáculos contribuíram para um aprendizado mais aprofundado sobre as ferramentas utilizadas.
+
+### 5. Instruções para instalação e execução
+1. **Clone o repositório**
+   git clone https://github.com/JasminCordeiro/FinanceControl.git
+2. **Acesse a pasta do projeto**
+   cd seu-repositorio
+3. **Instale as dependências**
+   npm install
+4. Rode a aplicação:
+   ng serve
+
+
+
+
